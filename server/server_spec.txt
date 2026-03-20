@@ -1,0 +1,68 @@
+Welcome to Ubuntu 22.04.5 LTS (GNU/Linux 5.15.0-164-generic x86_64)
+
+- Documentation: [https://help.ubuntu.com](https://help.ubuntu.com/)
+- Management: [https://landscape.canonical.com](https://landscape.canonical.com/)
+- Support: https://ubuntu.com/pro
+
+System information as of Fri Mar 20 05:41:15 AM UTC 2026
+
+System load:  2.29              Processes:                   985
+Usage of /:   49.0% of 6.87TB   Users logged in:             3
+Memory usage: 10%               IPv4 address for enp130s0f1: 172.31.88.110
+Swap usage:   0%
+
+- Strictly confined Kubernetes makes edge and IoT secure. Learn how MicroK8s
+just raised the bar for easy, resilient and secure K8s cluster deployment.
+
+    https://ubuntu.com/engage/secure-kubernetes-at-the-edge
+
+
+Expanded Security Maintenance for Applications is not enabled.
+
+80 updates can be applied immediately.
+To see these additional updates run: apt list --upgradable
+
+3 additional security updates can be applied with ESM Apps.
+Learn more about enabling ESM Apps service at https://ubuntu.com/esm
+
+New release '24.04.4 LTS' available.
+Run 'do-release-upgrade' to upgrade to it.
+
+- ** System restart required ***
+Last login: Fri Mar 20 04:56:54 2026 from 192.168.77.33
+
+^Cyh.ahn@aiengine2:~$ nvidia-smi
+Thu Mar 19 12:20:39 2026
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.126.09             Driver Version: 580.126.09     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA RTX A6000               Off |   00000000:01:00.0 Off |                  Off |
+| 30%   33C    P8             30W /  300W |    7532MiB /  49140MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA RTX A6000               Off |   00000000:43:00.0 Off |                  Off |
+| 30%   33C    P8             33W /  300W |   19488MiB /  49140MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+|   2  NVIDIA RTX A6000               Off |   00000000:81:00.0 Off |                  Off |
+| 30%   32C    P8             32W /  300W |   41558MiB /  49140MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+|   3  NVIDIA RTX A6000               Off |   00000000:C1:00.0 Off |                  Off |
+| 30%   32C    P8             27W /  300W |   39574MiB /  49140MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|    0   N/A  N/A          616738      C   ...tritonserver/bin/tritonserver       7522MiB |
+|    1   N/A  N/A          635946      C   /app/.venv/bin/python                 19478MiB |
+|    2   N/A  N/A          268007      C   VLLM::Worker                          41548MiB |
+|    3   N/A  N/A         1747641      C   VLLM::EngineCore                      39564MiB |

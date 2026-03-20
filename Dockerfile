@@ -121,6 +121,10 @@ COPY . .
 # Install the package in editable mode
 RUN pip install --no-cache-dir -e .
 
+# 🔥 추가 - lyg
+RUN pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+RUN pip install flash-attn --no-build-isolation || true
+
 # Create non-root user for security
 RUN useradd --create-home --shell /bin/bash appuser \
     && mkdir -p /tmp/numba_cache \
