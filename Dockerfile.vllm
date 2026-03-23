@@ -17,7 +17,8 @@ RUN rm -rf /var/lib/apt/lists/* && \
  && rm -rf /var/lib/apt/lists/*
 
 # Install API dependencies
-RUN pip install --no-cache-dir -U pip transformers && \
+RUN pip install --no-cache-dir -U pip && \
+    pip install --no-cache-dir "git+https://github.com/huggingface/transformers.git" && \
     pip install --no-cache-dir \
     fastapi>=0.109.0 \
     uvicorn[standard]>=0.27.0 \
