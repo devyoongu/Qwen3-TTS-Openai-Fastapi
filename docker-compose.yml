@@ -17,7 +17,8 @@ services:
       - WORKERS=1
       - CORS_ORIGINS=*
       - TTS_BACKEND=official
-      - TTS_WARMUP_ON_START=false
+      - TTS_WARMUP_ON_START=true
+      - TTS_ATTN=flash_attention_2
       # When using device_ids filter, the GPU appears as device 0 inside container
       - CUDA_VISIBLE_DEVICES=0
       - NVIDIA_DRIVER_CAPABILITIES=compute,utility
@@ -55,7 +56,8 @@ services:
       - CORS_ORIGINS=*
       - TTS_BACKEND=vllm_omni
       - TTS_WARMUP_ON_START=true
-      - TTS_MODEL_NAME=Qwen/Qwen3-TTS-12Hz-1.7B-CustomVoice
+      - TTS_MODEL_NAME=Qwen/Qwen3-TTS-12Hz-0.6B-CustomVoice
+      # Flash Attention 2 비활성화 — vLLM 내부 최적화와 충돌하여 8% 성능 저하
       - VLLM_WORKER_MULTIPROC_METHOD=spawn
       - NVIDIA_DRIVER_CAPABILITIES=compute,utility
       - HF_HOME=/root/.cache/huggingface
