@@ -11,7 +11,8 @@ import asyncio
 import logging
 import re
 from pathlib import Path
-from typing import Optional, Tuple, List, Dict, Any
+import threading
+from typing import AsyncGenerator, Optional, Tuple, List, Dict, Any
 import numpy as np
 
 from .base import TTSBackend
@@ -187,6 +188,59 @@ class OfficialQwen3TTSBackend(TTSBackend):
             logger.error(f"Speech generation failed: {e}")
             raise RuntimeError(f"Speech generation failed: {e}")
     
+    async def generate_speech_streaming(
+        self,
+        text: str,
+        voice: str,
+        language: str = "Auto",
+        instruct: Optional[str] = None,
+        speed: float = 1.0,
+        emit_every_frames: int = 6,
+        decode_window_frames: int = 80,
+        **kwargs,
+    ) -> AsyncGenerator[Tuple[np.ndarray, int], None]:
+        """Stream audio chunks as they are generated.
+
+        Runs the synchronous generator in a background thread and yields
+        chunks via an asyncio.Queue so the event loop stays unblocked.
+        """
+        if not self._ready:
+            await self.initialize()
+
+        loop = asyncio.get_event_loop()
+        chunk_queue: asyncio.Queue = asyncio.Queue()
+
+        def _run_generator() -> None:
+            try:
+                for chunk, sr in self.model.stream_generate_custom_voice(
+                    text=text,
+                    language=language,
+                    speaker=voice,
+                    instruct=instruct,
+                    emit_every_frames=emit_every_frames,
+                    decode_window_frames=decode_window_frames,
+                ):
+                    loop.call_soon_threadsafe(chunk_queue.put_nowait, (chunk, sr))
+            except Exception as exc:
+                loop.call_soon_threadsafe(chunk_queue.put_nowait, exc)
+            finally:
+                loop.call_soon_threadsafe(chunk_queue.put_nowait, None)  # sentinel
+
+        t = threading.Thread(target=_run_generator, daemon=True)
+        t.start()
+
+        try:
+            while True:
+                item = await chunk_queue.get()
+                if item is None:
+                    break
+                if isinstance(item, Exception):
+                    logger.error(f"Streaming speech generation failed: {item}")
+                    raise RuntimeError(f"Streaming speech generation failed: {item}")
+                yield item
+        finally:
+            t.join(timeout=5)
+
     def get_backend_name(self) -> str:
         """Return the name of this backend."""
         return "official"

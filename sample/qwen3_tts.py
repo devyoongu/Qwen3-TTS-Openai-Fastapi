@@ -72,6 +72,7 @@ def synthesize(
         "voice": voice,
         "input": text,
         "response_format": "pcm",
+        "stream": True,
     }
 
     logger.info("=== Qwen3 TTS 시작 ===")
