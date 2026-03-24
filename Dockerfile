@@ -102,7 +102,8 @@ RUN pip install --no-cache-dir \
 RUN pip install --no-cache-dir ninja packaging wheel
 
 # Install flash-attention 2 for optimized attention (requires CUDA)
-RUN pip install --no-cache-dir flash-attn --no-build-isolation
+# || true: Blackwell(RTX 5090) 등 미지원 GPU에서 빌드 실패해도 계속 진행 (sdpa fallback)
+RUN pip install --no-cache-dir flash-attn --no-build-isolation || true
 
 # =============================================================================
 # Stage 3: Production image (official backend)
