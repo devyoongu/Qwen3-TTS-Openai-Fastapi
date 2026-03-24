@@ -116,19 +116,10 @@ class OfficialQwen3TTSBackend(TTSBackend):
                 else:
                     raise RuntimeError(f"Failed to load model with any attention implementation. Last error: {last_error}")
 
-            # Apply torch.compile() optimization for faster inference
-            if torch.cuda.is_available() and hasattr(torch, 'compile'):
-                logger.info("Applying torch.compile() optimization...")
-                try:
-                    # Compile the model with reduce-overhead mode for faster inference
-                    self.model.model = torch.compile(
-                        self.model.model,
-                        mode="reduce-overhead",  # Optimize for inference speed
-                        fullgraph=False,  # Allow graph breaks for compatibility
-                    )
-                    logger.info("torch.compile() optimization applied successfully")
-                except Exception as e:
-                    logger.warning(f"Could not apply torch.compile(): {e}")
+            # torch.compile() is intentionally disabled for TTS inference.
+            # reduce-overhead mode uses CUDA graphs which recompile on every unique
+            # sequence length — autoregressive TTS outputs vary each request, causing
+            # cumulative recompilation overhead that far outweighs any speedup.
             
             # Enable cuDNN benchmarking for optimal convolution algorithms
             if torch.cuda.is_available():
